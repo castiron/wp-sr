@@ -1,0 +1,4 @@
+dbHost='20b5f02c6325dc7c952029d7c6a26fea4f5f50fe.rackspaceclouddb.com' # Database host
+dbUser='teamcfa_prod' # Database user (Note: This user needs certain privileges in order to use mysqldump)
+dbPass='FZpJY3XzM)nM$ysq4f' # Database password
+dbDb='teamcfa_schools' # Database password

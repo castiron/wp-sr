@@ -1,0 +1,37 @@
+#!/bin/bash
+# Search and Replace which plays nice with WordPress serialized data.
+
+
+wpSrPath="/home/change_me/wp-sr"
+
+settingsFile="${wpSrPath}/config/wp-sr-settings"
+domainUpdater="${wpSrPath}/lib/srdb.cli.php"
+
+if [ -e ${settingsFile} ]
+then
+   source ${settingsFile}
+else
+   echo "${settingsFile} not found! Exiting."
+   echo "Error! - Update the config directory path."
+   exit 1;
+fi
+
+echo '-_-_-_-_-_-_-_-_[WordPress Search & Replace]_-_-_-_-_-_-_-_-';
+echo 'Check the domain of the WordPress installation:';
+mysql -h ${dbHost} -u ${dbUser} --password="${dbPass}" -e "SELECT option_value FROM ${dbName}.wp_options WHERE option_name = 'siteurl';"
+echo 'Are you sure you wish to perform search/replace on this database? (y/n)?'
+read updateResponse
+if [[ ${updateResponse} == 'y' || ${updateResponse} == 'Y' ]]
+then
+    echo 'Search term: '
+    read searchDomain
+    echo 'Replace term:'
+    read replaceDomain
+    echo "Search for: ${searchDomain} and replace with: ${replaceDomain}"
+    echo 'Updating the database.' 
+    php ${domainUpdater} -h ${dbHost} -u ${dbUser} -n ${dbName} -s ${searchDomain} -r ${replaceDomain} -p ${dbPass}
+else
+    echo 'Skipping the update.';
+fi
+
+exit 0
